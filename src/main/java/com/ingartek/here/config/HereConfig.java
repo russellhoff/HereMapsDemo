@@ -6,18 +6,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.here.account.auth.OAuth1ClientCredentialsProvider;
 import com.here.account.oauth2.HereAccessTokenProvider;
+import com.ingartek.here.auth.HereAuth;
 import com.ingartek.here.client.HereClient;
-import com.ingartek.here.client.TokenAuthenticator;
 import com.ingartek.here.helper.ResourceFileLoader;
 
 @Configuration
 public class HereConfig {
 
-	@Autowired private TokenAuthenticator tokenAuthenticator;
 	@Autowired private ResourceFileLoader resFileLoader;
+	@Value("${base.url}") private String baseUrl;
 	
 	@Bean
 	public OAuth1ClientCredentialsProvider getOAuth1ClientCredentialsProvider() throws Exception {
@@ -39,8 +40,8 @@ public class HereConfig {
 	}
 	
 	@Bean
-	public HereClient getHereClient() {
-		return new HereClient(tokenAuthenticator);
+	public HereClient getHereClient(HereAuth pHereAuth) {
+		return new HereClient(pHereAuth, baseUrl);
 	}
 	
 }
